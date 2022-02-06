@@ -1,0 +1,62 @@
+\startcomponent implementation
+
+\environment report-environment
+\startchapter[title=Implementation of the project]
+\startsection[title=Language Models are Open Knowledge Graphs]
+\useURL[theblackcat102][https://github.com/theblackcat102/language-models-are-knowledge-graphs-pytorch]
+In order to replicate the approach presented previously, we made use of the code
+provided by the authors \from[theblackcat102].
+Three main steps to implement this project is to start with noun chunks for anchor terms found using en_core_web_md model from spaCy.
+Then, integrate Bert-large-cased model for Language Model. Last step is to use REL library for entity linking to wikidata 2019 knowledge graph.
+
+\placefigure
+[force][fig:img_17]
+{Wikidata folders.}
+{\externalfigure[images/img_17][width=0.6\textwidth]}
+
+After using their environment setup and installing the requirements, the next step is to execute “Map stage” which focuses on the entity linking using the REL repository.
+\blank
+{\bf REL} is a modular entity linking that utilizes English Wikipedia as a knowledge base and can be used for the following tasks:
+\startitemize
+\item {\bf Entity linking (EL)}: Given a text, the system outputs a list of mention-entity pairs, where each mention is a n-gram from text and each entity is an entity in the knowledge base.
+\item {\bf Entity Disambiguation (ED)}: Given a text and a list of mentions, the system assigns an entity (or NIL) to each mention.
+\stopitemize
+Last step is to Execute MAMA (Match and Map) section.
+
+\placefigure
+[force][fig:img_5]
+{Run of command \type{python extract.py examples/bob_dylan.txt bert-large-cased-bob_dynlan.jsonl --language_model bert-large-cased --use_cuda true}}
+{\externalfigure[images/img_5][width=0.8\textwidth]}
+\stopsection
+
+\startsection[title=OpenNRE]
+\useURL[OpenNRE][https://github.com/thunlp/OpenNRE]
+The code is provided in this repository \from[OpenNRE].
+After installing OpenNRE we import the package and load pre-trained models.
+Then use infer to do sentence-level relation extraction.
+The authors lists available models like:
+\startitemize
+\item \type{wiki80_cnn_softmax}: trained on wiki80 dataset with a CNN encoder.
+\item \type{wiki80_bert_softmax}: trained on wiki80 dataset with a BERT encoder.
+\item \type{wiki80_bertentity_softmax}: trained on wiki80 dataset with a BERT
+encoder (using entity representation concatenation).
+\item \type{tacred_bert_softmax}: trained on TACRED dataset with a BERT encoder.
+\item \type{tacred_bertentity_softmax}: trained on TACRED dataset with a BERT
+encoder (using entity representation concatenation).
+\stopitemize
+Besides the toolkit, there exists an online system for OpenNRE. This online system can be directly applied for extracting structured facts from plain text. Meanwhile, all extracted entity mentions and relations can be aligned to Wikidata.
+The application scenarios are mainly Sentence-Level RE, Bag-Level RE, Few-Shot RE and Document RE.
+\stopsection
+
+\startsection[title=FRED]
+\useURL[FRED][http://wit.istc.cnr.it/stlab-tools/fred/fredlib.py]
+FRED is available as a demo web application, and as a REST service \from[FRED].
+The current output of FRED is either graphic or in any RDF encoding with filtered and enriches graphs.
+For event classification, FRED uses Linked Data-oriented induction of types for the identified events, reusing e.g., VerbNet7, WordNet8, DBpedia9.
+\blank
+\useURL[FRED-api][http://wit.istc.cnr.it/stlab-tools/fred_api/]
+FRED API link is not accessible \from[FRED-api], but we can also replicate it using the Python script provided \goto{here}[url(FRED)].
+\stopsection
+\stopchapter
+
+\stopcomponent

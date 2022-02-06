@@ -1,0 +1,118 @@
+\startcomponent related-work
+
+\environment report-environment
+
+\startchapter[title=Related Work]
+\startsection[title=Language Models are Open Knowledge Graphs paper analysis] “Language Models are Open Knowledge Graphs” paper focused on building knowledge graphs from text by leveraging Transformer based language models.
+Thus, this research on a high level proposes to construct knowledge graphs (KGs) from pre-trained language models using BERT, GPT-2, GPT-3 without human supervision.
+\blank
+Basically, the core message in this paper is that there is no training required, the entire knowledge is simply extracted from running the corpus once.
+So, one forward pass through the pre-trained language model and KGs are constructed to get entities and relations.
+Let’s start by discussing the main subjects of this paper.
+
+\startsubsection[title=Language models]
+Language models determine next word probability by analyzing text data.
+They interpret this data by feeding it through an algorithm that establishes rules for context in natural language.
+Then, the model applies these rules in language tasks to accurately predict or produce new sentences.
+The model essentially learns the features and characteristics of a language and uses those features to understand new phrases.
+\blank
+The chosen pre-trained language models in this research can result in triplet
+classification, relation prediction and link prediction tasks.
+The paper provides some insights into the difference between using a BERT model vs a GPT model (auto-regressive in nature).
+\blank
+{\bf BERT} is a state-of-the-art pre-trained contextual language representation model built on a multilayer bidirectional Transformer encoder.
+The Transformer encoder is based on self-attention mechanism.
+There are two steps in BERT framework: pre-training and fine-tuning.
+\blank
+As for {\bf GPT2/3}, an autoregressive language model that uses deep learning to produce human-like text, it needs no fine-tuning and only few demonstrations to understand tasks and perform them.
+\blank
+The authors of “Language models are open knowledge graphs” indicate that BERT
+model has better success at identifying relations, compared to GPT2 and OpenIE
+because they are bidirectional in nature and see tokens in both directions while
+learning to predict masked tokens.
+\stopsubsection
+\startsubsection[title=Match and Map (MAMA) Method]
+For extracting KGs, one of the steps was that the authors designed an unsupervised approach called “MAMA” that successfully recovers the factual knowledge inferred from Language Models to build Knowledge Graphs from scratch.
+MAMA constructs a KG with a single forward pass of a pre-trained LM (without fine-tuning) over a textual corpus.
+\blank
+To explain their MAMA method, we can simply introduce what it does this way: we
+have a corpus, and we want to extract relations and entities out of it with the use of Knowledge Graph.
+The Knowledge Graph consists of 2 distinct things, it has entities that we can think of as nouns, and relations (occupation,belonging, fatherhood, country, etc\dots).
+The purpose of any relations is connecting the entities to form meanings.
+The required stages to build KGs starts with Match step then Map.
+\blank
+{\bf Match stage}: generates a set of candidate facts by matching the facts in the textual corpus with the knowledge in the pre-trained Language Model.
+Candidate facts are a set of extracted string triplets (namely; head, relation, and tail respectively).
+The longer the sentence the harder it is to extract the triplet strings.
+\blank
+{\bf Map stage}: the candidate facts are mapped to a schema and these schemas are usually defined by humans, so in this step they were still going to rely on humans to define the schema.
+This stage produces an open KG via mapping the matched candidate facts from the Match stage to both fixed KG schema and open schema.
+If the schema of candidate facts exists in the KG schemas (Wikidata and TAC KBP) annotated by humans, we map the candidate facts directly to the fixed KG schema.
+Otherwise, we reserve the unmapped candidate facts in the open schema.
+This results in a new type of Knowledge Graph (KG), known as open KG, with a mixture of mapped facts in fixed KG schema and unmapped facts in the open schema.
+\placefigure
+[][fig:img_1]
+{High level “MaMa” process flow proposed in the paper “Language Models are Open Knowledge Graphs”}
+{\externalfigure[images/img_1][width=0.7\textwidth]}
+\stopsubsection
+
+\startsubsection[title=Attention algorithm]
+What made their approach different was the fact they exploited the use of attention mechanisms to infer candidate triplets in text.
+During training, the attention weights are learned by the pre-trained transformer-based models so they can provide us with insights into the relationship between various terms in text.
+These weights, applied to anchor terms (noun chunks precisely) from a standard library like spaCy in their case, provide us with possible candidates’ facts (head, relation, tail), which can then be disambiguated using an off-the-shelf entity linker like REL.
+\blank
+We find the head and tail in a text, somewhere in between there might be a relation and the system needs to figure out where that is.
+So how does this method figure it out?
+\blank
+The Match process works by running a beam search to find triples with highest
+aggregate score.
+It disregards all the tokens behind the query and only looks ahead in the sentence.
+So that is why the upper half of the attention matrix is crossed out.
+From the token ‘Dylan’ we can only look at the tokens ahead of it (is, a, and songwriter).
+
+\placefigure
+[force][img_2]
+{Attention matrix for matching degree calculation and Matching example}
+{\startcombination[2*1]
+{\externalfigure[images/img_2_1][width=0.42\textwidth]}{}
+{\externalfigure[images/img_2_2][width=0.42\textwidth]}{}
+\stopcombination}
+\stopsubsection
+\stopsection
+
+\startsection[title=OpenNRE: An Open and Extensible Toolkit for Neural Relation Extraction]
+OpenNRE is an open-source and extensible toolkit that provides a unified framework to implement relation extraction models.
+This toolkit prioritizes operational efficiency based on TensorFlow and PyTorch, which support quick model training and validation.
+\blank
+Since Relation Extraction (RE) aims to predict relational facts from a plain text, OpenNRE is designed for various scenarios of RE like sentence-level RE, bag-level RE, document-level RE.
+Based on OpenNRE architecture, the authors explain how it works to achieve its goals for system encapsulation, which is a unified underlying platform built to encapsulate various data processing and training strategies.
+For operational efficiency, OpenNRE is based on TensorFlow and PyTorch, which enables it to train models on GPUs.
+For model extensibility, various neural modules are systematically implemented and some special algorithms. Hence, we can implement new RE models based on OpenNRE.
+\placefigure
+[force][fig:img_3]
+{OpenNRE architecture}
+{\externalfigure[images/img_3][width=0.8\textwidth]}
+\stopsection
+
+\startsection[title=FRED: Semantic Web Machine Reading with FRED]
+FRED is a tool for automatically producing RDF/OWL ontologies (extracting RDF
+graphs) and linked data from text.
+It formally represents, integrates, improves, and links the output of several NLP tools and it has been evaluated against generic tasks (frame detection, type induction, event extraction, distant relation extraction), as well as in application tasks (semantic sentiment analysis, citation relation interpretation).
+Since Events are considered as exclusive entities, FRED was developed to extract them and link their type as “Event” in the graph output.
+
+\placefigure
+[force][fig:img_4]
+{FRED architecture}
+{\externalfigure[images/img_4][width=0.8\textwidth]}
+
+The first layer takes care of reengineering, and involves external NLP components.
+The core of the reengineering consists of data structure readers, which read component outputs and pass them to refactoring components.
+\blank
+The second layer takes care of refactoring, which has its core in a modular library of heuristical rules that receive the result of reengineering readers, and produce FRED’s refactoring that is sent to the triplifier component.
+\blank
+The third layer implements integration, communication, and alignment.
+Here formatted data are taken into account by a software architecture which integrates FRED with NER and WSD.
+\stopsection
+\stopchapter
+
+\stopcomponent

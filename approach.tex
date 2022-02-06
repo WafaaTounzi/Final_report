@@ -1,0 +1,26 @@
+\startcomponent approach
+\environment report-environment
+
+\startchapter[title=Approach]
+\startsection[title=Dataset]
+We kept the same sentence “Bob Dylan is a songwriter” that the authors of “Language models are Open Knowledge Graphs” used as an input. The proposed method is unsupervised since it doesn't require any training process or data. 
+It only requires a single application of BERT per paragraph (instead of applying BERT for every possible triplet), which is relatively efficient.
+But mainly, the idea of looking into the pooled attention weights for linking entities and relations is novel.
+\stopsection
+
+\startsection[title=SILKNOW Knowledge Graph]
+SILKNOW is a research project based on records from existing catalogs that aims to produce digital modeling of weaving techniques (a “Virtual Loom”), through automatic visual recognition, advanced spatio-temporal visualization, multilingual and semantically enriched access to digital data.
+\blank
+SILKNOW improves the understanding, conservation and dissemination of European
+silk heritage from the 15th to the 19th century.
+By applying next-generation computing research to the needs of diverse users (museums, education, tourism, creative industries, media\dots), it preserves the tangible and intangible heritage associated with silk
+\blank
+The description of each silk heritage is based on controlled vocabularies that are essentials to link entities.
+The API access is developed for KG and the exploratory search engine ADASilk is created on top of it.
+Automatic image and text analysis are applied to predict missing metadata in the KG.
+\blank
+As for OpenNRE and FRED, we used four sentences from SILKNOW Knowledge Graph (full sentences in Annex section).
+\stopsection
+\stopchapter
+
+\stopcomponent

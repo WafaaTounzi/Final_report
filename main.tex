@@ -1,0 +1,48 @@
+\environment report-environment
+
+\usepath[{images}]
+\usebtxdataset[default][main.bib]
+\setupbtx[dataset=default]
+\definebtxrendering[mainlist][numbering=yes][dataset=default, group=examples]
+\setupinteraction[state=start]
+
+\starttext
+
+\midaligned{
+\externalfigure[images/logo][width=0.5\textwidth]
+}
+
+\blank[6*big]
+\midaligned{\tfa Semester Project - Fall 2021}
+\blank[2*big]
+\midaligned{\tfc “Language Models are Open Knowledge Graphs”}
+\midaligned{\tfb And other Methods for Relation/Entities Extraction}
+\blank[10*big]
+\blank[2*big]
+\midaligned{\tfa {\bf Student:} Wafaa Tounzi}
+\midaligned{\tfa tounzi@eurecom.fr}
+\blank[2*big]
+\midaligned{\tfa {\bf Supervisors:} Raphaël TRONCY}
+\midaligned{\tfa Ismail HARRANDO}
+\midaligned{\tfa and Thomas SCHLEIDER}
+\blank[12*big]
+\midaligned{Academic year: 2021/2022}
+\page[blank]
+
+\completecontent
+\page[blank]
+
+\component intro
+\component related-work
+\component approach
+\component implementation
+\component results
+\component conclusion
+\starttitle[title=Bibliography]
+\writetolist[chapter]{}{Bibliography}
+\placelistofpublications[mainlist][method=dataset]
+\stopchapter
+\component annex
+
+\placebookmarks[chapter, title]
+\stoptext

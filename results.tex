@@ -1,0 +1,135 @@
+\startcomponent results
+
+\environment report-environment
+
+\startchapter[title=Experiments Results]
+\startsection[title=“Language Models are Open Knowledge Graphs” output]
+This schema shows what happens exactly when we create a granular version of the
+proposed pipeline based on their code.
+As we see from the flow below, the pipeline involves a lot more than just running the sentences through an LM. While an LM may help us generate candidate facts, it is equally important to tune the other parts of the pipeline.
+All the other pieces of the pipeline try to leverage pre-trained models from libraries like spaCy, REL\dots
+
+\placefigure
+[force][fig:img_7]
+{Detailed flow diagram that shows in the pipeline at a lower granularity}
+{\externalfigure[images/img_7][width=0.7\textwidth]}
+
+We get to the final result which are the KG construction of “Bob Dylan is a songwriter”:
+\placefigure
+[here][fig:img_8]
+{Output of the final result}
+{\externalfigure[images/img_8][width=0.7\textwidth]}
+\stopsection
+\startitemize
+\item The mapped facts are existing in the final KG.
+\item The graphs are visually clear and understandable.
+\item The relation between entities is correct.
+\item 35.3\% of the unmapped facts are verified and are true on Wikidata.
+\stopitemize
+For instance, the output “Bob Dylan, signed, Albert Grossman” is an unmapped fact meaning that when the head and tail are linked but the relation between them is not mapped since there is no relation mapping from “signed” to a KG relation in Wikidata schema.
+\stopsection
+
+\startsection[title=OpenNRE outputs]
+Using SILKNOW sentence 1 for entities extraction on the online system for OpenNRE
+
+\placefigure
+[here][fig:img_9]
+{Online system for OpenNRE}
+{\externalfigure[images/img_9][width=0.7\textwidth]}
+
+\startitemize
+\item The online system has a real-time extraction without any training and deploying for every application of this toolkit, whether it's extracting entities from a sentence or a whole document.
+\item The API server needs maintenance and its bugs fixed. They mentioned this part as their future work.
+\stopitemize
+
+\placefigure
+[here][fig:img_10]
+{Server error}
+{\externalfigure[images/img_10][width=0.7\textwidth]}
+
+\startitemize
+\item The prediction of the relation between entities is accurate for some models like BERT and CNN
+\item \type{wiki80_bertentity_softmax} outputs most of the time “said to be same as”
+\stopitemize
+
+\placefigure
+[here][fig:img_11]
+{Outputs of OpenNRE for sentence 2}
+{\externalfigure[images/img_11][width=0.7\textwidth]}
+
+\startitemize
+\item \type{tacred_bert_softmax} and \type{tacred_bertentity_softmax} output only “NA” each time we run the command.
+\item The models only predict the relation and don't add any other fact or information to the input.
+\item We get the same prediction but with different confidence score different models like \type{wiki80_cnn_softmax}, \type{wiki80_bert_softmax}. For instance the prediction result ‘part of’ of sentence 2, The picture is actually “part of” Eastern Orthodox Church
+\stopitemize
+
+\placetable[][]{Relation results with their confidence scores}
+{\starttable[|c|c|c|c|]
+\HL
+\VL \ReFormat[cB]{Model} \VL \ReFormat[cB]{Sentence} \VL \ReFormat[cB]{Relation Result} \VL \ReFormat[cB]{Confidence Score} \VL \AR
+\HL
+\VL \Lower(2\lineheight){\type{wiki80_cnn_softmax}} \VL \#1 \VL Has part \VL 0.3279959261417389 \VL \AR
+\DC \DL[3] \DR
+\VL \VL \#2 \VL Part of \VL 0.5306962728500366 \VL \AR
+\DC \DL[3] \DR
+\VL \VL \#3 \VL Has part \VL 0.8898584246635437 \VL \AR
+\DC \DL[3] \DR
+\VL \VL \#4 \VL Mountain range \VL 0.3078944981098175 \VL \AR
+\HL
+\VL \Lower(2\lineheight){\type{wiki80_bert_softmax}} \VL \#1 \VL Followed by \VL 0.4160443544387817 \VL \AR
+\DC \DL[3] \DR
+\VL \VL \#2 \VL Part of \VL 0.9040890336036682 \VL \AR
+\DC \DL[3] \DR
+\VL \VL \#3 \VL Has part \VL 0.9865756690502167 \VL \AR
+\DC \DL[3] \DR
+\VL \VL \#4 \VL Followed by \VL 0.8147433996200562 \VL \AR
+\HL
+\stoptable}
+
+Using \type{wiki80_cnn_softmax} and \type{wiki80_bert_softmax} models that were primarily trained on a general dataset like wikipedia, both showed accurate outputs compared to the other models.
+We can see by running all the sentences, some of them can get the same prediction result but still would have different scores. We notice that in the output “Part of” or “Has Part”, BERT scored the highest confidence value. We conclude that the confidence score depends a lot on the type of LM used.
+
+\stopsection
+
+\startsection[title=FRED outputs]
+FRED is leveraging existing natural language methods and tools in order to obtain a unified, formalized representation of both facts and concepts expressed by a natural language text.
+It acts as an intermediate component for event extraction and representation, whose graphs can be combined in time series for historical tasks.
+
+\placefigure
+[force][fig:img_14]
+{OpenNRE graph for sentence 3}
+{\externalfigure[images/img_14][width=0.7\textwidth]}
+
+The relation between every entity in the text is extracted and linked with additional facts to enrich the graph.
+For instance, “Warp” is extracted and linked to its quality which is “weaving”.
+
+\startitemize
+\item Visually Clear and readable Graphs
+\item Easy access since it’s online and free
+\item Some outputs like “Military_Intelligence_Directorate_(Israel)” are extracted as a new fact but doesn’t add any value to the input:
+\stopitemize
+
+\placefigure
+[force][img_15]
+{Additional facts}
+{\startcombination[2*1]
+{\externalfigure[images/img_15][width=0.42\textwidth]}{Linked to input entities}
+{\externalfigure[images/img_16][width=0.42\textwidth]}{No useful information from sentence 1}
+\stopcombination}
+
+\startitemize
+\item Doesn’t predict relations since it only parses the text example and transforms it to linked data. The Events are extracted by using frame detection. FRED applies semantic
+role labeling to verbs and prepositions in order to detect event boundaries, and frame detection for resolving roles against a shared event ontology.
+\item In short sentences like “girl plays clarinet”, FRED links Clarinet to “instrument”. But for sentence 1, the word Clarinet is not linked to that.
+\stopitemize
+
+By running all the four sentences with FRED, we conclude that for each sentence’s output we would get a graph that has at least two additional facts linked to the input’s entities but not all these new facts are useful. We get all the entities and the relation between them.
+\blank
+What to improve:
+\startitemize
+\item Enriching it by combining it with other databases for more entities extractions and eventually be able to add new facts to the output
+\item Creating repositories of knowledge graphs that can be used to perform deep and formal annotation of large archives of documents, and to automatically produce formal relations between them.
+\stopitemize
+\stopchapter
+
+\stopcomponent
